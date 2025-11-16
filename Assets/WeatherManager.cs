@@ -15,7 +15,6 @@ public class WeatherManager
 
     private IEnumerator CallAPI(string url, Action<string> callback)
     {
-        Debug.Log("Calling API");
         using (UnityWebRequest request = UnityWebRequest.Get(url))
         {
             Debug.Log($"Sending web request {url}");
@@ -37,7 +36,6 @@ public class WeatherManager
 
     public IEnumerator GetWeatherXML(Action<string> callback)
     {
-        Debug.Log("Getting Weather XML");
         return CallAPI(xmlApi + apiKey, callback);
     }
 
