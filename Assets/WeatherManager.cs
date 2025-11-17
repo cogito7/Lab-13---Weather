@@ -5,8 +5,13 @@ using UnityEngine.Networking;
 
 public class WeatherManager
 {
+    public static readonly string[] locations = {
+        "Orlando,us",
+        "Seattle,us",
+        "London,uk"
+    };
     private string apiKey;
-    private const string xmlApi = "https://api.openweathermap.org/data/2.5/weather?q=Orlando,us&mode=xml&appid=";
+    private const string xmlApi = "https://api.openweathermap.org/data/2.5/weather?mode=xml";
 
     public WeatherManager(string apiKey)
     {
@@ -34,9 +39,9 @@ public class WeatherManager
         }
     }
 
-    public IEnumerator GetWeatherXML(Action<string> callback)
+    public IEnumerator GetWeatherXML(string location, Action<string> callback)
     {
-        return CallAPI(xmlApi + apiKey, callback);
+        return CallAPI($"{xmlApi}&q={location}&appid={apiKey}", callback);
     }
 
 }

@@ -1,11 +1,13 @@
 using System;
 using System.Collections;
 using System.Xml.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class WeatherLoader : MonoBehaviour
 {
     public string apiKey = "";
+    public string location = WeatherManager.locations[0];
     public Material sunny;
     public Material rainy;
     public Material snowy;
@@ -17,7 +19,7 @@ public class WeatherLoader : MonoBehaviour
     {
         weatherManager = new WeatherManager(apiKey);
         Action<string> weatherUpdateAction = (string xml) => parseWeather(xml);
-        StartCoroutine(weatherManager.GetWeatherXML(weatherUpdateAction));
+        StartCoroutine(weatherManager.GetWeatherXML(location, weatherUpdateAction));
     }
 
     void parseWeather(string xml)
@@ -49,6 +51,10 @@ public class WeatherLoader : MonoBehaviour
         {
             RenderSettings.skybox = snowy;
         }
+
+        //Check time
+        int hour = System.DateTime.Now.Hour;
+        
     }
 
     // Update is called once per frame
