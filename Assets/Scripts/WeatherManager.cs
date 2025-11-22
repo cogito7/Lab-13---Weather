@@ -8,7 +8,8 @@ public class WeatherManager
     public static readonly string[] locations = {
         "Orlando,us",
         "Seattle,us",
-        "London,uk"
+        "London,uk",
+        "Tokyo,jp"
     };
     private string apiKey;
     private const string xmlApi = "https://api.openweathermap.org/data/2.5/weather?mode=xml";
