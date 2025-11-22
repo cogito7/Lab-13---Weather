@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using Unity.VisualScripting;
+using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -11,12 +13,11 @@ public class ImageGetter : MonoBehaviour
 
     public string image = testWebImage;
 
-    private static Dictionary<string, Texture2D> cache = new Dictionary<string, Texture2D>();
+    private static Dictionary<string, UnityWebRequest> cache = new Dictionary<string, UnityWebRequest>();
 
     void Start()
     {
         Action<Texture2D> action = (Texture2D texture) => {
-            cache[image] = texture;
             setTexture(texture);
         };
         StartCoroutine(GetWebImage(image, action));
@@ -32,12 +33,18 @@ public class ImageGetter : MonoBehaviour
     {
         if (cache.ContainsKey(webImage))
         {
-            callback(cache.GetValueOrDefault(webImage));
+            UnityWebRequest request = cache.GetValueOrDefault(webImage);
+            while (!request.isDone)
+            {
+                yield return request;
+            }
+            callback(DownloadHandlerTexture.GetContent(request));
         }
         else
         {
             Debug.Log("Starting");
             UnityWebRequest request = UnityWebRequestTexture.GetTexture(webImage);
+            cache[webImage] = request;
             yield return request.SendWebRequest();
             callback(DownloadHandlerTexture.GetContent(request));
         }
